@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Centurion Workspaces</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #08090b;
+      --surface: #111318;
+      --surface2: #1a1d24;
+      --border: #252830;
+      --text: #e8e6e3;
+      --text-dim: #6b6e76;
+      --gold: #c9a84c;
+      --gold-soft: rgba(201,168,76,0.10);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Subtle grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 80px 32px 120px;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .logo-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      border: 1.5px solid var(--gold);
+      border-radius: 14px;
+      margin-bottom: 24px;
+      background: var(--gold-soft);
+    }
+
+    .logo-mark svg {
+      width: 28px;
+      height: 28px;
+      color: var(--gold);
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    h1 span { color: var(--gold); }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 15px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Workspace grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr; }
+      h1 { font-size: 32px; }
+      .container { padding: 48px 20px 80px; }
+    }
+
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--gold));
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .card:hover {
+      border-color: var(--card-accent, var(--gold));
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card-icon {
+      font-size: 32px;
+      margin-bottom: 14px;
+      line-height: 1;
+    }
+
+    .card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .card-desc {
+      color: var(--text-dim);
+      font-size: 13px;
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .card-arrow {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--card-accent, var(--gold));
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+
+    .card:hover .card-arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .card-arrow svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ── Individual card accents ── */
+    .card--findmysec8 { --card-accent: #d4943a; }
+    .card--commandcenter { --card-accent: #3b82f6; }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      margin-top: 72px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer p {
+      color: var(--text-dim);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    ::selection { background: var(--gold); color: #000; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="3" width="7" height="7" rx="1" />
+          <rect x="3" y="14" width="7" height="7" rx="1" />
+          <rect x="14" y="14" width="7" height="7" rx="1" />
+        </svg>
+      </div>
+      <h1><span>Centurion</span> Workspaces</h1>
+      <p class="subtitle">Select a workspace to continue</p>
+    </header>
+
+    <div class="grid">
+      <!--
+        ╔══════════════════════════════════════════════════╗
+        ║  WORKSPACE REGISTRY                              ║
+        ║  Add new kanban cards here when creating          ║
+        ║  additional hosted boards.                        ║
+        ║                                                   ║
+        ║  Template:                                        ║
+        ║  <a href="/{repo-name}/" class="card card--slug"> ║
+        ║    <div class="card-icon">EMOJI</div>            ║
+        ║    <div class="card-name">Name</div>             ║
+        ║    <p class="card-desc">Description</p>          ║
+        ║    <div class="card-arrow">                      ║
+        ║      Open <svg>...</svg>                         ║
+        ║    </div>                                         ║
+        ║  </a>                                             ║
+        ║                                                   ║
+        ║  Also add a CSS rule:                             ║
+        ║  .card--slug { --card-accent: #hexcolor; }       ║
+        ╚══════════════════════════════════════════════════╝
+      -->
+
+      <a href="/findmysec8-kanban/" class="card card--findmysec8">
+        <div class="card-icon">🏠</div>
+        <div class="card-name">Findmysec8.com</div>
+        <p class="card-desc">Section 8 housing marketplace — tenant search, agent listings, platform development.</p>
+        <div class="card-arrow">
+          Open
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
+          </svg>
+        </div>
+      </a>
+
+      <a href="/commandcenter-kanban/" class="card card--commandcenter">
+        <div class="card-icon">🎯</div>
+        <div class="card-name">Command Center</div>
+        <p class="card-desc">Client operations, capital raises, compliance, partnerships, and business strategy.</p>
+        <div class="card-arrow">
+          Open
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
+          </svg>
+        </div>
+      </a>
+    </div>
+
+    <footer class="footer">
+      <p><a href="https://centurionfinancial.com">Centurion Financial</a></p>
+    </footer>
+  </div>
+</body>
+</html>
