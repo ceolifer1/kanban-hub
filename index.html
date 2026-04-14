@@ -30,7 +30,7 @@
       overflow-x: hidden;
     }
 
-    /* ── Subtle grain overlay ── */
+    /* ââ Subtle grain overlay ââ */
     body::before {
       content: '';
       position: fixed;
@@ -48,7 +48,7 @@
       padding: 80px 32px 120px;
     }
 
-    /* ── Header ── */
+    /* ââ Header ââ */
     .header {
       text-align: center;
       margin-bottom: 64px;
@@ -90,7 +90,7 @@
       letter-spacing: 0.02em;
     }
 
-    /* ── Workspace grid ── */
+    /* ââ Workspace grid ââ */
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -183,11 +183,11 @@
       height: 14px;
     }
 
-    /* ── Individual card accents ── */
+    /* ââ Individual card accents ââ */
     .card--findmysec8 { --card-accent: #d4943a; }
     .card--commandcenter { --card-accent: #3b82f6; }
 
-    /* ── Create workspace card ── */
+    /* ââ Create workspace card ââ */
     .card--create {
       border: 2px dashed var(--border);
       background: transparent;
@@ -208,7 +208,7 @@
     .card--create .card-icon { font-size: 36px; opacity: 0.4; }
     .card--create .card-desc { color: var(--text-dim); font-size: 13px; }
 
-    /* ── Modal ── */
+    /* ââ Modal ââ */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -330,7 +330,7 @@
     .msg--success { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: #22c55e; }
     .msg--error { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #ef4444; }
 
-    /* ── Footer ── */
+    /* ââ Footer ââ */
     .footer {
       text-align: center;
       margin-top: 72px;
@@ -369,30 +369,30 @@
 
     <div class="grid">
       <!--
-        ╔══════════════════════════════════════════════════╗
-        ║  WORKSPACE REGISTRY                              ║
-        ║  Add new kanban cards here when creating          ║
-        ║  additional hosted boards.                        ║
-        ║                                                   ║
-        ║  Template:                                        ║
-        ║  <a href="/{repo-name}/" class="card card--slug"> ║
-        ║    <div class="card-icon">EMOJI</div>            ║
-        ║    <div class="card-name">Name</div>             ║
-        ║    <p class="card-desc">Description</p>          ║
-        ║    <div class="card-arrow">                      ║
-        ║      Open <svg>...</svg>                         ║
-        ║    </div>                                         ║
-        ║  </a>                                             ║
-        ║                                                   ║
-        ║  Also add a CSS rule:                             ║
-        ║  .card--slug { --card-accent: #hexcolor; }       ║
-        ╚══════════════════════════════════════════════════╝
+        ââââââââââââââââââââââââââââââââââââââââââââââââââââ
+        â  WORKSPACE REGISTRY                              â
+        â  Add new kanban cards here when creating          â
+        â  additional hosted boards.                        â
+        â                                                   â
+        â  Template:                                        â
+        â  <a href="/{repo-name}/" class="card card--slug"> â
+        â    <div class="card-icon">EMOJI</div>            â
+        â    <div class="card-name">Name</div>             â
+        â    <p class="card-desc">Description</p>          â
+        â    <div class="card-arrow">                      â
+        â      Open <svg>...</svg>                         â
+        â    </div>                                         â
+        â  </a>                                             â
+        â                                                   â
+        â  Also add a CSS rule:                             â
+        â  .card--slug { --card-accent: #hexcolor; }       â
+        ââââââââââââââââââââââââââââââââââââââââââââââââââââ
       -->
 
       <a href="/findmysec8-kanban/" class="card card--findmysec8">
-        <div class="card-icon">🏠</div>
+        <div class="card-icon">ð </div>
         <div class="card-name">Findmysec8.com</div>
-        <p class="card-desc">Section 8 housing marketplace — tenant search, agent listings, platform development.</p>
+        <p class="card-desc">Section 8 housing marketplace â tenant search, agent listings, platform development.</p>
         <div class="card-arrow">
           Open
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -402,9 +402,22 @@
       </a>
 
       <a href="/commandcenter-kanban/" class="card card--commandcenter">
-        <div class="card-icon">🎯</div>
+        <div class="card-icon">ð¯</div>
         <div class="card-name">Command Center</div>
         <p class="card-desc">Client operations, capital raises, compliance, partnerships, and business strategy.</p>
+        <div class="card-arrow">
+          Open
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
+          </svg>
+        </div>
+      </a>
+
+      
+      <a href="/tac-kanban/" class="card" style="--card-accent:#ec4899">
+        <div class="card-icon">📋</div>
+        <div class="card-name">TAC</div>
+        <p class="card-desc">tac website</p>
         <div class="card-arrow">
           Open
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -437,16 +450,16 @@
 
         <label>Icon</label>
         <div class="emoji-picker" id="emoji-picker">
-          <button class="emoji-btn selected" data-emoji="📋" onclick="selectEmoji(this)">📋</button>
-          <button class="emoji-btn" data-emoji="🏠" onclick="selectEmoji(this)">🏠</button>
-          <button class="emoji-btn" data-emoji="🎯" onclick="selectEmoji(this)">🎯</button>
-          <button class="emoji-btn" data-emoji="💰" onclick="selectEmoji(this)">💰</button>
-          <button class="emoji-btn" data-emoji="🚀" onclick="selectEmoji(this)">🚀</button>
-          <button class="emoji-btn" data-emoji="📊" onclick="selectEmoji(this)">📊</button>
-          <button class="emoji-btn" data-emoji="⚙️" onclick="selectEmoji(this)">⚙️</button>
-          <button class="emoji-btn" data-emoji="📢" onclick="selectEmoji(this)">📢</button>
-          <button class="emoji-btn" data-emoji="🏦" onclick="selectEmoji(this)">🏦</button>
-          <button class="emoji-btn" data-emoji="💼" onclick="selectEmoji(this)">💼</button>
+          <button class="emoji-btn selected" data-emoji="ð" onclick="selectEmoji(this)">ð</button>
+          <button class="emoji-btn" data-emoji="ð " onclick="selectEmoji(this)">ð </button>
+          <button class="emoji-btn" data-emoji="ð¯" onclick="selectEmoji(this)">ð¯</button>
+          <button class="emoji-btn" data-emoji="ð°" onclick="selectEmoji(this)">ð°</button>
+          <button class="emoji-btn" data-emoji="ð" onclick="selectEmoji(this)">ð</button>
+          <button class="emoji-btn" data-emoji="ð" onclick="selectEmoji(this)">ð</button>
+          <button class="emoji-btn" data-emoji="âï¸" onclick="selectEmoji(this)">âï¸</button>
+          <button class="emoji-btn" data-emoji="ð¢" onclick="selectEmoji(this)">ð¢</button>
+          <button class="emoji-btn" data-emoji="ð¦" onclick="selectEmoji(this)">ð¦</button>
+          <button class="emoji-btn" data-emoji="ð¼" onclick="selectEmoji(this)">ð¼</button>
         </div>
 
         <label>Accent Color</label>
@@ -489,7 +502,7 @@
   </div>
   <script>
     const EDGE_FN_URL = 'https://pxnivzlwvwrgbiatvqji.supabase.co/functions/v1/create-workspace';
-    let selectedEmoji = '📋';
+    let selectedEmoji = 'ð';
     let selectedColor = '#c9a84c';
 
     function selectEmoji(el) {
@@ -567,7 +580,7 @@
           <div class="msg msg--success">
             <strong>${name}</strong> workspace created!<br>
             <span style="font-size:12px;opacity:0.8;">
-              The app is deploying to GitHub Pages — it'll be live at
+              The app is deploying to GitHub Pages â it'll be live at
               <a href="${data.liveUrl}" target="_blank" style="color:#22c55e;">${data.liveUrl}</a>
               in about 2 minutes. The hub will update automatically on next page load.
             </span>
@@ -579,7 +592,7 @@
         document.getElementById('ws-name').value = '';
         document.getElementById('ws-desc').value = '';
         document.getElementById('ws-repo').value = '';
-        selectedEmoji = '📋';
+        selectedEmoji = 'ð';
         selectedColor = '#c9a84c';
         document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
         document.querySelector('.emoji-btn').classList.add('selected');
