@@ -9,347 +9,70 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #08090b;
-      --surface: #111318;
-      --surface2: #1a1d24;
-      --border: #252830;
-      --text: #e8e6e3;
-      --text-dim: #6b6e76;
-      --gold: #c9a84c;
-      --gold-soft: rgba(201,168,76,0.10);
+      --bg: #08090b; --surface: #111318; --surface2: #1a1d24;
+      --border: #252830; --text: #e8e6e3; --text-dim: #6b6e76;
+      --gold: #c9a84c; --gold-soft: rgba(201,168,76,0.10);
     }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Subtle grain overlay ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 80px 32px 120px;
-    }
-
-    /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Header ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-    .header {
-      text-align: center;
-      margin-bottom: 64px;
-    }
-
-    .logo-mark {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 56px;
-      height: 56px;
-      border: 1.5px solid var(--gold);
-      border-radius: 14px;
-      margin-bottom: 24px;
-      background: var(--gold-soft);
-    }
-
-    .logo-mark svg {
-      width: 28px;
-      height: 28px;
-      color: var(--gold);
-    }
-
-    h1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 42px;
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      margin-bottom: 12px;
-    }
-
-    h1 span { color: var(--gold); }
-
-    .subtitle {
-      color: var(--text-dim);
-      font-size: 15px;
-      font-weight: 400;
-      letter-spacing: 0.02em;
-    }
-
-    /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Workspace grid ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-
-    @media (max-width: 600px) {
-      .grid { grid-template-columns: 1fr; }
-      h1 { font-size: 32px; }
-      .container { padding: 48px 20px 80px; }
-    }
-
-    .card {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px 24px 24px;
-      text-decoration: none;
-      color: inherit;
-      transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
-      overflow: hidden;
-    }
-
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--card-accent, var(--gold));
-      opacity: 0;
-      transition: opacity 0.25s;
-    }
-
-    .card:hover {
-      border-color: var(--card-accent, var(--gold));
-      transform: translateY(-3px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-    }
-
-    .card:hover::before { opacity: 1; }
-
-    .card-icon {
-      font-size: 32px;
-      margin-bottom: 14px;
-      line-height: 1;
-    }
-
-    .card-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 22px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      letter-spacing: -0.01em;
-    }
-
-    .card-desc {
-      color: var(--text-dim);
-      font-size: 13px;
-      line-height: 1.5;
-      flex: 1;
-    }
-
-    .card-arrow {
-      margin-top: 18px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--card-accent, var(--gold));
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      opacity: 0;
-      transform: translateX(-6px);
-      transition: opacity 0.25s, transform 0.25s;
-    }
-
-    .card:hover .card-arrow {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .card-arrow svg {
-      width: 14px;
-      height: 14px;
-    }
-
-    /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Individual card accents ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-    .card--findmysec8 { --card-accent: #d4943a; }
-    .card--commandcenter { --card-accent: #3b82f6; }
-
-    /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Create workspace card ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-    .card--create {
-      border: 2px dashed var(--border);
-      background: transparent;
-      cursor: pointer;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      min-height: 180px;
-      transition: border-color 0.25s, background 0.25s;
-    }
-    .card--create:hover {
-      border-color: var(--gold);
-      background: var(--gold-soft);
-      transform: translateY(-3px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-    }
-    .card--create::before { display: none; }
-    .card--create .card-icon { font-size: 36px; opacity: 0.4; }
-    .card--create .card-desc { color: var(--text-dim); font-size: 13px; }
-
-    /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Modal ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      backdrop-filter: blur(8px);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-    .modal-overlay.active { display: flex; }
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-      width: 100%;
-      max-width: 480px;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
-    }
-    .modal h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 26px;
-      font-weight: 600;
-      color: var(--gold);
-      margin-bottom: 24px;
-    }
-    .modal label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 6px;
-    }
-    .modal input, .modal textarea {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 14px;
-      color: var(--text);
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      outline: none;
-      margin-bottom: 16px;
-    }
-    .modal textarea { resize: vertical; min-height: 60px; }
-    .modal input:focus, .modal textarea:focus { border-color: var(--gold); }
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      margin-top: 8px;
-    }
-    .btn-ghost {
-      background: var(--surface2);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-    }
-    .btn-primary {
-      background: var(--gold);
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-    }
-    .btn-primary:hover { filter: brightness(1.1); }
-    .emoji-picker {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    }
-    .emoji-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      font-size: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .emoji-btn.selected {
-      background: var(--gold-soft);
-      border-color: var(--gold);
-    }
-    .color-picker {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .color-dot {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: border-color 0.15s, transform 0.15s;
-    }
-    .color-dot.selected { border-color: var(--text); transform: scale(1.15); }
-    .msg { padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
-    .msg--success { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: #22c55e; }
-    .msg--error { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #ef4444; }
-
-    /* ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Footer ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ */
-    .footer {
-      text-align: center;
-      margin-top: 72px;
-      padding-top: 32px;
-      border-top: 1px solid var(--border);
-    }
-
-    .footer p {
-      color: var(--text-dim);
-      font-size: 12px;
-      letter-spacing: 0.04em;
-    }
-
-    .footer a {
-      color: var(--gold);
-      text-decoration: none;
-    }
-
-    ::selection { background: var(--gold); color: #000; }
+    body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh; }
+    body::before { content:''; position:fixed; inset:0; background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events:none; z-index:0; }
+    .container { position:relative; z-index:1; max-width:800px; margin:0 auto; padding:80px 32px 120px; }
+    .header { text-align:center; margin-bottom:64px; }
+    .logo-mark { display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; border:1.5px solid var(--gold); border-radius:14px; margin-bottom:24px; background:var(--gold-soft); }
+    .logo-mark svg { width:28px; height:28px; color:var(--gold); }
+    h1 { font-family:'Cormorant Garamond',serif; font-size:42px; font-weight:600; letter-spacing:-0.03em; line-height:1.1; margin-bottom:12px; }
+    h1 span { color:var(--gold); }
+    .subtitle { color:var(--text-dim); font-size:15px; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media (max-width:600px) { .grid{grid-template-columns:1fr;} h1{font-size:32px;} .container{padding:48px 20px 80px;} }
+    .card { position:relative; display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px 24px 24px; text-decoration:none; color:inherit; transition:border-color .25s,transform .2s,box-shadow .25s; overflow:hidden; }
+    .card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--card-accent,var(--gold)); opacity:0; transition:opacity .25s; }
+    .card:hover { border-color:var(--card-accent,var(--gold)); transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,0,0,0.4); }
+    .card:hover::before { opacity:1; }
+    .card-icon { font-size:32px; margin-bottom:14px; line-height:1; }
+    .card-name { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; margin-bottom:6px; }
+    .card-desc { color:var(--text-dim); font-size:13px; line-height:1.5; flex:1; }
+    .card-arrow { margin-top:18px; display:flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--card-accent,var(--gold)); text-transform:uppercase; letter-spacing:0.08em; opacity:0; transform:translateX(-6px); transition:opacity .25s,transform .25s; }
+    .card:hover .card-arrow { opacity:1; transform:translateX(0); }
+    .card-arrow svg { width:14px; height:14px; }
+    .card--findmysec8 { --card-accent:#d4943a; }
+    .card--commandcenter { --card-accent:#3b82f6; }
+    .card--create { border:2px dashed var(--border); background:transparent; cursor:pointer; align-items:center; justify-content:center; text-align:center; min-height:180px; }
+    .card--create:hover { border-color:var(--gold); background:var(--gold-soft); transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,0,0,0.4); }
+    .card--create::before { display:none; }
+    .card--create .card-icon { font-size:36px; opacity:0.4; }
+    .card-manage { position:absolute; top:10px; right:10px; background:var(--surface2); border:1px solid var(--border); color:var(--text-dim); border-radius:6px; width:28px; height:28px; font-size:14px; cursor:pointer; display:none; align-items:center; justify-content:center; z-index:5; }
+    .card:hover .card-manage { display:flex; }
+    .card-manage:hover { background:rgba(239,68,68,0.15); color:#ef4444; border-color:rgba(239,68,68,0.3); }
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:100; align-items:center; justify-content:center; padding:24px; }
+    .modal-overlay.active { display:flex; }
+    .modal { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px; width:100%; max-width:480px; box-shadow:0 24px 64px rgba(0,0,0,0.5); }
+    .modal h2 { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:600; color:var(--gold); margin-bottom:24px; }
+    .modal label { display:block; font-size:11px; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:6px; }
+    .modal input,.modal textarea { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:10px 14px; color:var(--text); font-size:14px; font-family:'DM Sans',sans-serif; outline:none; margin-bottom:16px; }
+    .modal textarea { resize:vertical; min-height:60px; }
+    .modal input:focus,.modal textarea:focus { border-color:var(--gold); }
+    .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:8px; }
+    .btn-ghost { background:var(--surface2); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:10px 20px; font-size:13px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+    .btn-primary { background:var(--gold); color:#000; border:none; border-radius:8px; padding:10px 20px; font-size:13px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+    .btn-primary:hover { filter:brightness(1.1); }
+    .btn-danger { background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); border-radius:8px; padding:10px 20px; font-size:13px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+    .emoji-picker { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+    .emoji-btn { width:40px; height:40px; border-radius:8px; font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center; background:var(--bg); border:1px solid var(--border); }
+    .emoji-btn.selected { background:var(--gold-soft); border-color:var(--gold); }
+    .color-picker { display:flex; gap:8px; margin-bottom:16px; }
+    .color-dot { width:28px; height:28px; border-radius:50%; cursor:pointer; border:2px solid transparent; transition:border-color .15s,transform .15s; }
+    .color-dot.selected { border-color:var(--text); transform:scale(1.15); }
+    .msg { padding:10px 14px; border-radius:8px; font-size:13px; margin-bottom:16px; }
+    .msg--success { background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.3); color:#22c55e; }
+    .msg--error { background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); color:#ef4444; }
+    .progress-wrap { background:var(--surface2); border-radius:8px; padding:14px; margin-bottom:16px; display:none; }
+    .progress-bar { background:var(--border); border-radius:4px; height:4px; margin-top:10px; overflow:hidden; }
+    .progress-bar-fill { width:0%; height:100%; background:var(--gold); border-radius:4px; transition:width .5s ease; }
+    .footer { text-align:center; margin-top:72px; padding-top:32px; border-top:1px solid var(--border); }
+    .footer p { color:var(--text-dim); font-size:12px; letter-spacing:0.04em; }
+    .footer a { color:var(--gold); text-decoration:none; }
+    ::selection { background:var(--gold); color:#000; }
   </style>
 </head>
 <body>
@@ -357,167 +80,50 @@
     <header class="header">
       <div class="logo-mark">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="7" height="7" rx="1" />
-          <rect x="14" y="3" width="7" height="7" rx="1" />
-          <rect x="3" y="14" width="7" height="7" rx="1" />
-          <rect x="14" y="14" width="7" height="7" rx="1" />
+          <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
+          <rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" />
         </svg>
       </div>
       <h1><span>Centurion</span> Workspaces</h1>
       <p class="subtitle">Select a workspace to continue</p>
     </header>
 
-    <div class="grid">
-      <!--
-        ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ  WORKSPACE REGISTRY                              ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ  Add new kanban cards here when creating          ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ  additional hosted boards.                        ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ                                                   ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ  Template:                                        ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ  <a href="/{repo-name}/" class="card card--slug"> ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ    <div class="card-icon">EMOJI</div>            ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ    <div class="card-name">Name</div>             ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ    <p class="card-desc">Description</p>          ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ    <div class="card-arrow">                      ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ      Open <svg>...</svg>                         ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ    </div>                                         ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ  </a>                                             ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ                                                   ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ  Also add a CSS rule:                             ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂ  .card--slug { --card-accent: #hexcolor; }       ÃÂ¢ÃÂÃÂ
-        ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
-      -->
+    <div class="grid" id="workspace-grid"></div>
 
-      <a href="/findmysec8-kanban/" class="card card--findmysec8">
-        <div class="card-icon">ÃÂ°ÃÂÃÂÃÂ </div>
-        <div class="card-name">Findmysec8.com</div>
-        <p class="card-desc">Section 8 housing marketplace ÃÂ¢ÃÂÃÂ tenant search, agent listings, platform development.</p>
-        <div class="card-arrow">
-          Open
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
-          </svg>
+    <!-- Create workspace modal -->
+    <div id="create-modal" class="modal-overlay" onclick="if(event.target===this)closeModal('create-modal')">
+      <div class="modal">
+        <h2 id="modal-title">New Workspace</h2>
+        <div id="modal-msg"></div>
+        <label>Workspace Name</label>
+        <input id="ws-name" type="text" placeholder="e.g. ProCredit Repair" />
+        <label>Description</label>
+        <textarea id="ws-desc" placeholder="What is this workspace for?"></textarea>
+        <label>Icon</label>
+        <div class="emoji-picker" id="emoji-picker"></div>
+        <label>Accent Color</label>
+        <div class="color-picker" id="color-picker"></div>
+        <label>Repo Name <span style="font-weight:400;text-transform:none;letter-spacing:0">(auto-generated)</span></label>
+        <input id="ws-repo" type="text" placeholder="auto-generated from name" />
+        <div class="progress-wrap" id="progress-area">
+          <p id="progress-text" style="font-size:13px;color:var(--gold);">Creating workspace...</p>
+          <div class="progress-bar"><div class="progress-bar-fill" id="progress-bar"></div></div>
         </div>
-      </a>
-
-      <a href="/commandcenter-kanban/" class="card card--commandcenter">
-        <div class="card-icon">ÃÂ°ÃÂÃÂÃÂ¯</div>
-        <div class="card-name">Command Center</div>
-        <p class="card-desc">Client operations, capital raises, compliance, partnerships, and business strategy.</p>
-        <div class="card-arrow">
-          Open
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
-          </svg>
+        <div class="modal-actions" id="modal-buttons">
+          <button class="btn-ghost" onclick="closeModal('create-modal')">Cancel</button>
+          <button class="btn-primary" id="create-btn" onclick="createWorkspace()">Create Workspace</button>
         </div>
-      </a>
-
-      
-      <a href="/tac-kanban/" class="card" style="--card-accent:#ec4899">
-        <div class="card-icon">Ã°ÂÂÂ</div>
-        <div class="card-name">TAC</div>
-        <p class="card-desc">tac website</p>
-        <div class="card-arrow">
-          Open
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
-          </svg>
-        </div>
-      </a>
-
-      
-      <a href="/test-ws-kanban/" class="card" style="--card-accent:#8b5cf6">
-        <div class="card-icon">ð</div>
-        <div class="card-name">Test Workspace</div>
-        <p class="card-desc">Testing</p>
-        <div class="card-arrow">
-          Open
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
-          </svg>
-        </div>
-      </a>
-
-      
-      <a href="/tac-test-kanban/" class="card" style="--card-accent:#3b82f6">
-        <div class="card-icon">🎯</div>
-        <div class="card-name">TAC</div>
-        <p class="card-desc">Test</p>
-        <div class="card-arrow">
-          Open
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M5 12h14" /><path d="M12 5l7 7-7 7" />
-          </svg>
-        </div>
-      </a>
-
-      <!-- Dynamic workspaces loaded from localStorage -->
-
-      <!-- Create new workspace card -->
-      <div class="card card--create" onclick="document.getElementById('create-modal').classList.add('active')">
-        <div class="card-icon">+</div>
-        <div class="card-name" style="font-size:16px; color:var(--text-dim);">New Workspace</div>
-        <p class="card-desc">Add a kanban workspace</p>
       </div>
     </div>
 
-    <!-- Create workspace modal -->
-    <div id="create-modal" class="modal-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+    <!-- Delete confirm modal -->
+    <div id="delete-modal" class="modal-overlay" onclick="if(event.target===this)closeModal('delete-modal')">
       <div class="modal">
-        <h2>New Workspace</h2>
-        <div id="modal-msg"></div>
-
-        <label>Workspace Name</label>
-        <input id="ws-name" type="text" placeholder="e.g. ProCredit Repair" />
-
-        <label>Description</label>
-        <textarea id="ws-desc" placeholder="What is this workspace for?"></textarea>
-
-        <label>Icon</label>
-        <div class="emoji-picker" id="emoji-picker">
-          <button class="emoji-btn selected" data-emoji="ÃÂ°ÃÂÃÂÃÂ" onclick="selectEmoji(this)">ÃÂ°ÃÂÃÂÃÂ</button>
-          <button class="emoji-btn" data-emoji="ÃÂ°ÃÂÃÂÃÂ " onclick="selectEmoji(this)">ÃÂ°ÃÂÃÂÃÂ </button>
-          <button class="emoji-btn" data-emoji="ÃÂ°ÃÂÃÂÃÂ¯" onclick="selectEmoji(this)">ÃÂ°ÃÂÃÂÃÂ¯</button>
-          <button class="emoji-btn" data-emoji="ÃÂ°ÃÂÃÂÃÂ°" onclick="selectEmoji(this)">ÃÂ°ÃÂÃÂÃÂ°</button>
-          <button class="emoji-btn" data-emoji="ÃÂ°ÃÂÃÂÃÂ" onclick="selectEmoji(this)">ÃÂ°ÃÂÃÂÃÂ</button>
-          <button class="emoji-btn" data-emoji="ÃÂ°ÃÂÃÂÃÂ" onclick="selectEmoji(this)">ÃÂ°ÃÂÃÂÃÂ</button>
-          <button class="emoji-btn" data-emoji="ÃÂ¢ÃÂÃÂÃÂ¯ÃÂ¸ÃÂ" onclick="selectEmoji(this)">ÃÂ¢ÃÂÃÂÃÂ¯ÃÂ¸ÃÂ</button>
-          <button class="emoji-btn" data-emoji="ÃÂ°ÃÂÃÂÃÂ¢" onclick="selectEmoji(this)">ÃÂ°ÃÂÃÂÃÂ¢</button>
-          <button class="emoji-btn" data-emoji="ÃÂ°ÃÂÃÂÃÂ¦" onclick="selectEmoji(this)">ÃÂ°ÃÂÃÂÃÂ¦</button>
-          <button class="emoji-btn" data-emoji="ÃÂ°ÃÂÃÂÃÂ¼" onclick="selectEmoji(this)">ÃÂ°ÃÂÃÂÃÂ¼</button>
-        </div>
-
-        <label>Accent Color</label>
-        <div class="color-picker" id="color-picker">
-          <div class="color-dot selected" style="background:#c9a84c" data-color="#c9a84c" onclick="selectColor(this)"></div>
-          <div class="color-dot" style="background:#3b82f6" data-color="#3b82f6" onclick="selectColor(this)"></div>
-          <div class="color-dot" style="background:#d4943a" data-color="#d4943a" onclick="selectColor(this)"></div>
-          <div class="color-dot" style="background:#8b5cf6" data-color="#8b5cf6" onclick="selectColor(this)"></div>
-          <div class="color-dot" style="background:#ef4444" data-color="#ef4444" onclick="selectColor(this)"></div>
-          <div class="color-dot" style="background:#22c55e" data-color="#22c55e" onclick="selectColor(this)"></div>
-          <div class="color-dot" style="background:#ec4899" data-color="#ec4899" onclick="selectColor(this)"></div>
-          <div class="color-dot" style="background:#06b6d4" data-color="#06b6d4" onclick="selectColor(this)"></div>
-        </div>
-
-        <label>Repo Name <span style="font-weight:400;text-transform:none;letter-spacing:0">(auto-generated, edit if needed)</span></label>
-        <input id="ws-repo" type="text" placeholder="auto-generated from name" />
-        <p style="font-size:11px; color:var(--text-dim); margin-top:-12px; margin-bottom:16px;">
-          This becomes the GitHub repo name and URL path. Lowercase, hyphens only.
-        </p>
-
-        <div id="progress-area" style="display:none;">
-          <div style="background:var(--surface2);border-radius:8px;padding:14px;margin-bottom:16px;">
-            <p id="progress-text" style="font-size:13px;color:var(--gold);">Creating workspace...</p>
-            <div style="background:var(--border);border-radius:4px;height:4px;margin-top:10px;overflow:hidden;">
-              <div id="progress-bar" style="width:0%;height:100%;background:var(--gold);border-radius:4px;transition:width 0.5s ease;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-actions" id="modal-buttons">
-          <button class="btn-ghost" onclick="document.getElementById('create-modal').classList.remove('active')">Cancel</button>
-          <button class="btn-primary" id="create-btn" onclick="createWorkspace()">Create Workspace</button>
+        <h2>Remove Workspace</h2>
+        <p id="delete-msg" style="color:var(--text-dim);font-size:14px;margin-bottom:20px;line-height:1.5;"></p>
+        <div class="modal-actions">
+          <button class="btn-ghost" onclick="closeModal('delete-modal')">Cancel</button>
+          <button class="btn-danger" id="delete-btn" onclick="confirmDelete()">Remove from Hub</button>
         </div>
       </div>
     </div>
@@ -526,31 +132,78 @@
       <p><a href="https://centurionfinancial.com">Centurion Financial</a></p>
     </footer>
   </div>
+
   <script>
-    const EDGE_FN_URL = 'https://pxnivzlwvwrgbiatvqji.supabase.co/functions/v1/create-workspace';
-    let selectedEmoji = 'ÃÂ°ÃÂÃÂÃÂ';
-    let selectedColor = '#c9a84c';
+    const EDGE_FN = 'https://pxnivzlwvwrgbiatvqji.supabase.co/functions/v1/create-workspace';
+    const EMOJIS = ['📋','🏠','🎯','💰','🚀','📊','⚙️','📢','🏦','💼','🔧','📱'];
+    const COLORS = ['#c9a84c','#3b82f6','#d4943a','#8b5cf6','#ef4444','#22c55e','#ec4899','#06b6d4'];
+    const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
 
-    function selectEmoji(el) {
-      document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
-      el.classList.add('selected');
-      selectedEmoji = el.dataset.emoji;
+    let selectedEmoji = '📋', selectedColor = '#c9a84c', deleteTarget = null;
+
+    // Built-in workspaces (always present, not removable)
+    const BUILTIN = [
+      { repo:'findmysec8-kanban', name:'Findmysec8.com', desc:'Section 8 housing marketplace — tenant search, agent listings, platform development.', emoji:'🏠', color:'#d4943a', builtin:true },
+      { repo:'commandcenter-kanban', name:'Command Center', desc:'Client operations, capital raises, compliance, partnerships, and business strategy.', emoji:'🎯', color:'#3b82f6', builtin:true },
+    ];
+
+    function getCustomWorkspaces() {
+      try { return JSON.parse(localStorage.getItem('centurion_workspaces')||'[]'); } catch { return []; }
+    }
+    function saveCustomWorkspaces(list) { localStorage.setItem('centurion_workspaces', JSON.stringify(list)); }
+
+    function renderGrid() {
+      const all = [...BUILTIN, ...getCustomWorkspaces()];
+      const grid = document.getElementById('workspace-grid');
+      grid.innerHTML = all.map((ws,i) => `
+        <a href="/${ws.repo}/" class="card" style="--card-accent:${ws.color}">
+          <div class="card-icon">${ws.emoji}</div>
+          <div class="card-name">${ws.name}</div>
+          <p class="card-desc">${ws.desc}</p>
+          <div class="card-arrow">Open ${ARROW}</div>
+          ${ws.builtin ? '' : `<button class="card-manage" onclick="event.preventDefault();event.stopPropagation();showDelete(${i - BUILTIN.length},'${ws.name}','${ws.repo}')" title="Remove workspace">&times;</button>`}
+        </a>
+      `).join('') + `
+        <div class="card card--create" onclick="openCreate()">
+          <div class="card-icon">+</div>
+          <div class="card-name" style="font-size:16px;color:var(--text-dim)">New Workspace</div>
+          <p class="card-desc">Create a kanban workspace</p>
+        </div>`;
     }
 
-    function selectColor(el) {
-      document.querySelectorAll('.color-dot').forEach(b => b.classList.remove('selected'));
-      el.classList.add('selected');
-      selectedColor = el.dataset.color;
+    function openCreate() {
+      document.getElementById('ws-name').value = '';
+      document.getElementById('ws-desc').value = '';
+      document.getElementById('ws-repo').value = '';
+      document.getElementById('modal-msg').innerHTML = '';
+      document.getElementById('progress-area').style.display = 'none';
+      document.getElementById('create-btn').disabled = false;
+      document.getElementById('create-btn').textContent = 'Create Workspace';
+      selectedEmoji = '📋'; selectedColor = '#c9a84c';
+      renderPickers();
+      document.getElementById('create-modal').classList.add('active');
     }
 
-    // Auto-generate repo name from workspace name
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    function renderPickers() {
+      document.getElementById('emoji-picker').innerHTML = EMOJIS.map(e =>
+        `<button class="emoji-btn${e===selectedEmoji?' selected':''}" onclick="selEmoji(this,'${e}')">${e}</button>`
+      ).join('');
+      document.getElementById('color-picker').innerHTML = COLORS.map(c =>
+        `<div class="color-dot${c===selectedColor?' selected':''}" style="background:${c}" onclick="selColor(this,'${c}')"></div>`
+      ).join('');
+    }
+
+    function selEmoji(el,e) { selectedEmoji=e; renderPickers(); }
+    function selColor(el,c) { selectedColor=c; renderPickers(); }
+
+    // Auto-generate repo name
     document.addEventListener('DOMContentLoaded', () => {
-      const nameInput = document.getElementById('ws-name');
-      const repoInput = document.getElementById('ws-repo');
-      nameInput.addEventListener('input', () => {
-        const slug = nameInput.value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-kanban';
-        repoInput.value = slug;
+      document.getElementById('ws-name').addEventListener('input', e => {
+        document.getElementById('ws-repo').value = e.target.value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') + '-kanban';
       });
+      renderGrid();
     });
 
     function setProgress(text, pct) {
@@ -562,85 +215,59 @@
     async function createWorkspace() {
       const name = document.getElementById('ws-name').value.trim();
       const desc = document.getElementById('ws-desc').value.trim();
-      const repoName = document.getElementById('ws-repo').value.trim();
+      const repo = document.getElementById('ws-repo').value.trim();
       const msgEl = document.getElementById('modal-msg');
-      const createBtn = document.getElementById('create-btn');
+      const btn = document.getElementById('create-btn');
 
-      if (!name) {
-        msgEl.innerHTML = '<div class="msg msg--error">Workspace name is required.</div>';
-        return;
-      }
+      if (!name) { msgEl.innerHTML = '<div class="msg msg--error">Name is required.</div>'; return; }
+      const slug = (repo || name.toLowerCase().replace(/[^a-z0-9]+/g,'-') + '-kanban').replace(/[^a-z0-9-]/g,'');
 
-      const slug = (repoName || name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-kanban').replace(/[^a-z0-9-]/gi, '').toLowerCase();
-
-      // Disable button and show progress
-      createBtn.disabled = true;
-      createBtn.textContent = 'Creating...';
-      msgEl.innerHTML = '';
-
-      setProgress('Creating repository from template...', 10);
+      btn.disabled = true; btn.textContent = 'Creating...'; msgEl.innerHTML = '';
+      setProgress('Creating repository and configuring...', 15);
 
       try {
-        const res = await fetch(EDGE_FN_URL, {
+        const res = await fetch(EDGE_FN, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name,
-            description: desc,
-            emoji: selectedEmoji,
-            accentColor: selectedColor,
-            repoName: slug,
-          }),
+          body: JSON.stringify({ name, description:desc, emoji:selectedEmoji, accentColor:selectedColor, repoName:slug }),
         });
-
         const data = await res.json();
+        if (!res.ok || data.error) throw new Error(data.error || 'Failed');
 
-        if (!res.ok || data.error) {
-          throw new Error(data.error || 'Failed to create workspace');
+        setProgress('Workspace created! Deploying to GitHub Pages...', 90);
+
+        // Save to local registry
+        const custom = getCustomWorkspaces();
+        if (!custom.find(w => w.repo === slug)) {
+          custom.push({ repo:slug, name, desc, emoji:selectedEmoji, color:selectedColor });
+          saveCustomWorkspaces(custom);
         }
+        renderGrid();
 
-        setProgress('Workspace created! Deploying...', 90);
-
-        // Show success
-        msgEl.innerHTML = `
-          <div class="msg msg--success">
-            <strong>${name}</strong> workspace created!<br>
-            <span style="font-size:12px;opacity:0.8;">
-              The app is deploying to GitHub Pages ÃÂ¢ÃÂÃÂ it'll be live at
-              <a href="${data.liveUrl}" target="_blank" style="color:#22c55e;">${data.liveUrl}</a>
-              in about 2 minutes. The hub will update automatically on next page load.
-            </span>
-          </div>`;
-
+        msgEl.innerHTML = `<div class="msg msg--success"><strong>${name}</strong> created! It will be live at <a href="${data.liveUrl}" style="color:#22c55e" target="_blank">${data.liveUrl}</a> in ~2 minutes.</div>`;
         setProgress('Done!', 100);
-
-        // Reset form
-        document.getElementById('ws-name').value = '';
-        document.getElementById('ws-desc').value = '';
-        document.getElementById('ws-repo').value = '';
-        selectedEmoji = 'ÃÂ°ÃÂÃÂÃÂ';
-        selectedColor = '#c9a84c';
-        document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
-        document.querySelector('.emoji-btn').classList.add('selected');
-        document.querySelectorAll('.color-dot').forEach(b => b.classList.remove('selected'));
-        document.querySelector('.color-dot').classList.add('selected');
-
-        // Close modal after delay
-        setTimeout(() => {
-          document.getElementById('create-modal').classList.remove('active');
-          document.getElementById('progress-area').style.display = 'none';
-          msgEl.innerHTML = '';
-          // Reload to show the new hub card (pushed by edge function)
-          window.location.reload();
-        }, 5000);
-
+        setTimeout(() => closeModal('create-modal'), 4000);
       } catch (err) {
         msgEl.innerHTML = `<div class="msg msg--error">${err.message}</div>`;
         document.getElementById('progress-area').style.display = 'none';
       }
+      btn.disabled = false; btn.textContent = 'Create Workspace';
+    }
 
-      createBtn.disabled = false;
-      createBtn.textContent = 'Create Workspace';
+    function showDelete(idx, name, repo) {
+      deleteTarget = { idx, repo };
+      document.getElementById('delete-msg').innerHTML = `Remove <strong>${name}</strong> (<code>${repo}</code>) from the hub? This only removes it from your view — the GitHub repo and deployed site will remain.`;
+      document.getElementById('delete-modal').classList.add('active');
+    }
+
+    function confirmDelete() {
+      if (!deleteTarget) return;
+      const custom = getCustomWorkspaces();
+      custom.splice(deleteTarget.idx, 1);
+      saveCustomWorkspaces(custom);
+      renderGrid();
+      closeModal('delete-modal');
+      deleteTarget = null;
     }
   </script>
 </body>
