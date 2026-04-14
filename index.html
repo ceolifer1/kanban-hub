@@ -414,7 +414,6 @@
       </a>
 
       <!-- Dynamic workspaces loaded from localStorage -->
-      <div id="dynamic-workspaces"></div>
 
       <!-- Create new workspace card -->
       <div class="card card--create" onclick="document.getElementById('create-modal').classList.add('active')">
@@ -462,15 +461,24 @@
           <div class="color-dot" style="background:#06b6d4" data-color="#06b6d4" onclick="selectColor(this)"></div>
         </div>
 
-        <label>Kanban URL Path</label>
-        <input id="ws-path" type="text" placeholder="e.g. /my-project-kanban/" />
+        <label>Repo Name <span style="font-weight:400;text-transform:none;letter-spacing:0">(auto-generated, edit if needed)</span></label>
+        <input id="ws-repo" type="text" placeholder="auto-generated from name" />
         <p style="font-size:11px; color:var(--text-dim); margin-top:-12px; margin-bottom:16px;">
-          The path on this GitHub Pages site where the kanban app is deployed.
+          This becomes the GitHub repo name and URL path. Lowercase, hyphens only.
         </p>
 
-        <div class="modal-actions">
+        <div id="progress-area" style="display:none;">
+          <div style="background:var(--surface2);border-radius:8px;padding:14px;margin-bottom:16px;">
+            <p id="progress-text" style="font-size:13px;color:var(--gold);">Creating workspace...</p>
+            <div style="background:var(--border);border-radius:4px;height:4px;margin-top:10px;overflow:hidden;">
+              <div id="progress-bar" style="width:0%;height:100%;background:var(--gold);border-radius:4px;transition:width 0.5s ease;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions" id="modal-buttons">
           <button class="btn-ghost" onclick="document.getElementById('create-modal').classList.remove('active')">Cancel</button>
-          <button class="btn-primary" onclick="createWorkspace()">Add Workspace</button>
+          <button class="btn-primary" id="create-btn" onclick="createWorkspace()">Create Workspace</button>
         </div>
       </div>
     </div>
@@ -480,6 +488,7 @@
     </footer>
   </div>
   <script>
+    const EDGE_FN_URL = 'https://pxnivzlwvwrgbiatvqji.supabase.co/functions/v1/create-workspace';
     let selectedEmoji = '📋';
     let selectedColor = '#c9a84c';
 
@@ -495,76 +504,105 @@
       selectedColor = el.dataset.color;
     }
 
-    function getWorkspaces() {
-      try { return JSON.parse(localStorage.getItem('centurion_workspaces') || '[]'); }
-      catch { return []; }
+    // Auto-generate repo name from workspace name
+    document.addEventListener('DOMContentLoaded', () => {
+      const nameInput = document.getElementById('ws-name');
+      const repoInput = document.getElementById('ws-repo');
+      nameInput.addEventListener('input', () => {
+        const slug = nameInput.value.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-kanban';
+        repoInput.value = slug;
+      });
+    });
+
+    function setProgress(text, pct) {
+      document.getElementById('progress-area').style.display = 'block';
+      document.getElementById('progress-text').textContent = text;
+      document.getElementById('progress-bar').style.width = pct + '%';
     }
 
-    function saveWorkspaces(list) {
-      localStorage.setItem('centurion_workspaces', JSON.stringify(list));
-    }
-
-    function renderWorkspaces() {
-      const container = document.getElementById('dynamic-workspaces');
-      const workspaces = getWorkspaces();
-      const arrowSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5l7 7-7 7" /></svg>';
-      container.innerHTML = workspaces.map((ws, i) => `
-        <a href="${ws.path}" class="card" style="--card-accent:${ws.color}">
-          <div class="card-icon">${ws.emoji}</div>
-          <div class="card-name">${ws.name}</div>
-          <p class="card-desc">${ws.desc}</p>
-          <div class="card-arrow">Open ${arrowSvg}</div>
-          <button onclick="event.preventDefault();event.stopPropagation();removeWorkspace(${i})"
-            style="position:absolute;top:10px;right:10px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#ef4444;border-radius:6px;width:24px;height:24px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;"
-            title="Remove workspace">&times;</button>
-        </a>
-      `).join('');
-    }
-
-    function createWorkspace() {
+    async function createWorkspace() {
       const name = document.getElementById('ws-name').value.trim();
       const desc = document.getElementById('ws-desc').value.trim();
-      const path = document.getElementById('ws-path').value.trim();
+      const repoName = document.getElementById('ws-repo').value.trim();
       const msgEl = document.getElementById('modal-msg');
+      const createBtn = document.getElementById('create-btn');
 
-      if (!name || !path) {
-        msgEl.innerHTML = '<div class="msg msg--error">Name and URL path are required.</div>';
+      if (!name) {
+        msgEl.innerHTML = '<div class="msg msg--error">Workspace name is required.</div>';
         return;
       }
 
-      const workspaces = getWorkspaces();
-      workspaces.push({ name, desc, path, emoji: selectedEmoji, color: selectedColor });
-      saveWorkspaces(workspaces);
-      renderWorkspaces();
+      const slug = (repoName || name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-kanban').replace(/[^a-z0-9-]/gi, '').toLowerCase();
 
-      // Reset form
-      document.getElementById('ws-name').value = '';
-      document.getElementById('ws-desc').value = '';
-      document.getElementById('ws-path').value = '';
-      selectedEmoji = '📋';
-      selectedColor = '#c9a84c';
-      document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
-      document.querySelector('.emoji-btn').classList.add('selected');
-      document.querySelectorAll('.color-dot').forEach(b => b.classList.remove('selected'));
-      document.querySelector('.color-dot').classList.add('selected');
+      // Disable button and show progress
+      createBtn.disabled = true;
+      createBtn.textContent = 'Creating...';
+      msgEl.innerHTML = '';
 
-      msgEl.innerHTML = '<div class="msg msg--success">Workspace added!</div>';
-      setTimeout(() => {
-        msgEl.innerHTML = '';
-        document.getElementById('create-modal').classList.remove('active');
-      }, 1200);
+      setProgress('Creating repository from template...', 10);
+
+      try {
+        const res = await fetch(EDGE_FN_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            description: desc,
+            emoji: selectedEmoji,
+            accentColor: selectedColor,
+            repoName: slug,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || data.error) {
+          throw new Error(data.error || 'Failed to create workspace');
+        }
+
+        setProgress('Workspace created! Deploying...', 90);
+
+        // Show success
+        msgEl.innerHTML = `
+          <div class="msg msg--success">
+            <strong>${name}</strong> workspace created!<br>
+            <span style="font-size:12px;opacity:0.8;">
+              The app is deploying to GitHub Pages — it'll be live at
+              <a href="${data.liveUrl}" target="_blank" style="color:#22c55e;">${data.liveUrl}</a>
+              in about 2 minutes. The hub will update automatically on next page load.
+            </span>
+          </div>`;
+
+        setProgress('Done!', 100);
+
+        // Reset form
+        document.getElementById('ws-name').value = '';
+        document.getElementById('ws-desc').value = '';
+        document.getElementById('ws-repo').value = '';
+        selectedEmoji = '📋';
+        selectedColor = '#c9a84c';
+        document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+        document.querySelector('.emoji-btn').classList.add('selected');
+        document.querySelectorAll('.color-dot').forEach(b => b.classList.remove('selected'));
+        document.querySelector('.color-dot').classList.add('selected');
+
+        // Close modal after delay
+        setTimeout(() => {
+          document.getElementById('create-modal').classList.remove('active');
+          document.getElementById('progress-area').style.display = 'none';
+          msgEl.innerHTML = '';
+          // Reload to show the new hub card (pushed by edge function)
+          window.location.reload();
+        }, 5000);
+
+      } catch (err) {
+        msgEl.innerHTML = `<div class="msg msg--error">${err.message}</div>`;
+        document.getElementById('progress-area').style.display = 'none';
+      }
+
+      createBtn.disabled = false;
+      createBtn.textContent = 'Create Workspace';
     }
-
-    function removeWorkspace(index) {
-      if (!confirm('Remove this workspace from the hub?')) return;
-      const workspaces = getWorkspaces();
-      workspaces.splice(index, 1);
-      saveWorkspaces(workspaces);
-      renderWorkspaces();
-    }
-
-    // Load dynamic workspaces on page load
-    renderWorkspaces();
   </script>
 </body>
 </html>
