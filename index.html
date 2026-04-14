@@ -187,6 +187,149 @@
     .card--findmysec8 { --card-accent: #d4943a; }
     .card--commandcenter { --card-accent: #3b82f6; }
 
+    /* ── Create workspace card ── */
+    .card--create {
+      border: 2px dashed var(--border);
+      background: transparent;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 180px;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .card--create:hover {
+      border-color: var(--gold);
+      background: var(--gold-soft);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+    .card--create::before { display: none; }
+    .card--create .card-icon { font-size: 36px; opacity: 0.4; }
+    .card--create .card-desc { color: var(--text-dim); font-size: 13px; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    }
+    .modal h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .modal label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .modal input, .modal textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      margin-bottom: 16px;
+    }
+    .modal textarea { resize: vertical; min-height: 60px; }
+    .modal input:focus, .modal textarea:focus { border-color: var(--gold); }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+    .btn-ghost {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary {
+      background: var(--gold);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .emoji-picker {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .emoji-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .emoji-btn.selected {
+      background: var(--gold-soft);
+      border-color: var(--gold);
+    }
+    .color-picker {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .color-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .color-dot.selected { border-color: var(--text); transform: scale(1.15); }
+    .msg { padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
+    .msg--success { background: rgba(34,197,94,0.12); border: 1px solid rgba(34,197,94,0.3); color: #22c55e; }
+    .msg--error { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #ef4444; }
+
     /* ── Footer ── */
     .footer {
       text-align: center;
@@ -269,11 +412,159 @@
           </svg>
         </div>
       </a>
+
+      <!-- Dynamic workspaces loaded from localStorage -->
+      <div id="dynamic-workspaces"></div>
+
+      <!-- Create new workspace card -->
+      <div class="card card--create" onclick="document.getElementById('create-modal').classList.add('active')">
+        <div class="card-icon">+</div>
+        <div class="card-name" style="font-size:16px; color:var(--text-dim);">New Workspace</div>
+        <p class="card-desc">Add a kanban workspace</p>
+      </div>
+    </div>
+
+    <!-- Create workspace modal -->
+    <div id="create-modal" class="modal-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+      <div class="modal">
+        <h2>New Workspace</h2>
+        <div id="modal-msg"></div>
+
+        <label>Workspace Name</label>
+        <input id="ws-name" type="text" placeholder="e.g. ProCredit Repair" />
+
+        <label>Description</label>
+        <textarea id="ws-desc" placeholder="What is this workspace for?"></textarea>
+
+        <label>Icon</label>
+        <div class="emoji-picker" id="emoji-picker">
+          <button class="emoji-btn selected" data-emoji="📋" onclick="selectEmoji(this)">📋</button>
+          <button class="emoji-btn" data-emoji="🏠" onclick="selectEmoji(this)">🏠</button>
+          <button class="emoji-btn" data-emoji="🎯" onclick="selectEmoji(this)">🎯</button>
+          <button class="emoji-btn" data-emoji="💰" onclick="selectEmoji(this)">💰</button>
+          <button class="emoji-btn" data-emoji="🚀" onclick="selectEmoji(this)">🚀</button>
+          <button class="emoji-btn" data-emoji="📊" onclick="selectEmoji(this)">📊</button>
+          <button class="emoji-btn" data-emoji="⚙️" onclick="selectEmoji(this)">⚙️</button>
+          <button class="emoji-btn" data-emoji="📢" onclick="selectEmoji(this)">📢</button>
+          <button class="emoji-btn" data-emoji="🏦" onclick="selectEmoji(this)">🏦</button>
+          <button class="emoji-btn" data-emoji="💼" onclick="selectEmoji(this)">💼</button>
+        </div>
+
+        <label>Accent Color</label>
+        <div class="color-picker" id="color-picker">
+          <div class="color-dot selected" style="background:#c9a84c" data-color="#c9a84c" onclick="selectColor(this)"></div>
+          <div class="color-dot" style="background:#3b82f6" data-color="#3b82f6" onclick="selectColor(this)"></div>
+          <div class="color-dot" style="background:#d4943a" data-color="#d4943a" onclick="selectColor(this)"></div>
+          <div class="color-dot" style="background:#8b5cf6" data-color="#8b5cf6" onclick="selectColor(this)"></div>
+          <div class="color-dot" style="background:#ef4444" data-color="#ef4444" onclick="selectColor(this)"></div>
+          <div class="color-dot" style="background:#22c55e" data-color="#22c55e" onclick="selectColor(this)"></div>
+          <div class="color-dot" style="background:#ec4899" data-color="#ec4899" onclick="selectColor(this)"></div>
+          <div class="color-dot" style="background:#06b6d4" data-color="#06b6d4" onclick="selectColor(this)"></div>
+        </div>
+
+        <label>Kanban URL Path</label>
+        <input id="ws-path" type="text" placeholder="e.g. /my-project-kanban/" />
+        <p style="font-size:11px; color:var(--text-dim); margin-top:-12px; margin-bottom:16px;">
+          The path on this GitHub Pages site where the kanban app is deployed.
+        </p>
+
+        <div class="modal-actions">
+          <button class="btn-ghost" onclick="document.getElementById('create-modal').classList.remove('active')">Cancel</button>
+          <button class="btn-primary" onclick="createWorkspace()">Add Workspace</button>
+        </div>
+      </div>
     </div>
 
     <footer class="footer">
       <p><a href="https://centurionfinancial.com">Centurion Financial</a></p>
     </footer>
   </div>
+  <script>
+    let selectedEmoji = '📋';
+    let selectedColor = '#c9a84c';
+
+    function selectEmoji(el) {
+      document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedEmoji = el.dataset.emoji;
+    }
+
+    function selectColor(el) {
+      document.querySelectorAll('.color-dot').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedColor = el.dataset.color;
+    }
+
+    function getWorkspaces() {
+      try { return JSON.parse(localStorage.getItem('centurion_workspaces') || '[]'); }
+      catch { return []; }
+    }
+
+    function saveWorkspaces(list) {
+      localStorage.setItem('centurion_workspaces', JSON.stringify(list));
+    }
+
+    function renderWorkspaces() {
+      const container = document.getElementById('dynamic-workspaces');
+      const workspaces = getWorkspaces();
+      const arrowSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5l7 7-7 7" /></svg>';
+      container.innerHTML = workspaces.map((ws, i) => `
+        <a href="${ws.path}" class="card" style="--card-accent:${ws.color}">
+          <div class="card-icon">${ws.emoji}</div>
+          <div class="card-name">${ws.name}</div>
+          <p class="card-desc">${ws.desc}</p>
+          <div class="card-arrow">Open ${arrowSvg}</div>
+          <button onclick="event.preventDefault();event.stopPropagation();removeWorkspace(${i})"
+            style="position:absolute;top:10px;right:10px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#ef4444;border-radius:6px;width:24px;height:24px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;"
+            title="Remove workspace">&times;</button>
+        </a>
+      `).join('');
+    }
+
+    function createWorkspace() {
+      const name = document.getElementById('ws-name').value.trim();
+      const desc = document.getElementById('ws-desc').value.trim();
+      const path = document.getElementById('ws-path').value.trim();
+      const msgEl = document.getElementById('modal-msg');
+
+      if (!name || !path) {
+        msgEl.innerHTML = '<div class="msg msg--error">Name and URL path are required.</div>';
+        return;
+      }
+
+      const workspaces = getWorkspaces();
+      workspaces.push({ name, desc, path, emoji: selectedEmoji, color: selectedColor });
+      saveWorkspaces(workspaces);
+      renderWorkspaces();
+
+      // Reset form
+      document.getElementById('ws-name').value = '';
+      document.getElementById('ws-desc').value = '';
+      document.getElementById('ws-path').value = '';
+      selectedEmoji = '📋';
+      selectedColor = '#c9a84c';
+      document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+      document.querySelector('.emoji-btn').classList.add('selected');
+      document.querySelectorAll('.color-dot').forEach(b => b.classList.remove('selected'));
+      document.querySelector('.color-dot').classList.add('selected');
+
+      msgEl.innerHTML = '<div class="msg msg--success">Workspace added!</div>';
+      setTimeout(() => {
+        msgEl.innerHTML = '';
+        document.getElementById('create-modal').classList.remove('active');
+      }, 1200);
+    }
+
+    function removeWorkspace(index) {
+      if (!confirm('Remove this workspace from the hub?')) return;
+      const workspaces = getWorkspaces();
+      workspaces.splice(index, 1);
+      saveWorkspaces(workspaces);
+      renderWorkspaces();
+    }
+
+    // Load dynamic workspaces on page load
+    renderWorkspaces();
+  </script>
 </body>
 </html>
